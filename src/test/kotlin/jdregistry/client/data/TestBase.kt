@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalArgumentException
 
-
 /**
  * Unifies routines to test objects that are generally representable by a String
  * and will be serialized to a String by jackson
@@ -89,21 +88,18 @@ abstract class TestBase<T> {
     fun `Consecutive Writing and Reading of objects preserves equality`() {
 
         forEachValidStringAsObject {
-
-               val reReadObject: T = jacksonObjectMapper().readValue(it.toJSON(), clazz)
-               Assertions.assertEquals(reReadObject, it)
+            val reReadObject: T = jacksonObjectMapper().readValue(it.toJSON(), clazz)
+            Assertions.assertEquals(reReadObject, it)
         }
     }
-
-
 }
 
 //
-//internal fun <T> Iterable<T>.serializedSameAs(transform: (T) -> String) {
+// internal fun <T> Iterable<T>.serializedSameAs(transform: (T) -> String) {
 //
 //    forEach {
 //
 //        val serialized = jacksonObjectMapper().writeValueAsString(it)
 //        Assertions.assertEquals(serialized, transform(it).quoted())
 //    }
-//}
+// }

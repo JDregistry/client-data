@@ -1,12 +1,5 @@
 package jdregistry.client.data
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-
-
 class PathComponentTests {
 //
 //    private val pathComponents = listOf("namespace", "jboss", "library").associate {
@@ -24,7 +17,7 @@ class PathComponentTests {
 //    }
 //
 //
-///*
+// /*
 // * The below are tests for JSON serialization and deserialization
 // */
 //    @Test

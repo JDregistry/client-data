@@ -1,12 +1,10 @@
 package jdregistry.client.data
 
-import org.junit.jupiter.api.Test
-
 class RepositoryNameTests {
 
 //    private val repos = listOf(
-//            RepositoryName("namespace/repo1"),
-//            RepositoryName("repo2")
+//            RepositoryNameClass("namespace/repo1"),
+//            RepositoryNameClass("repo2")
 //    )
 //    private val tags = listOf(
 //            Tag.LATEST,
@@ -35,38 +33,38 @@ class RepositoryNameTests {
 //    @Test
 //    fun some_valid_repos() {
 //
-//        RepositoryName("foo/bar")
-//        RepositoryName("foo")
+//        RepositoryNameClass("foo/bar")
+//        RepositoryNameClass("foo")
 //    }
 //
 //    @Test(expected = IllegalArgumentException::class)
 //    fun invalid_first_path_1() {
 //
-//        RepositoryName(invalidIdentifier)
+//        RepositoryNameClass(invalidIdentifier)
 //    }
 //
 //    @Test(expected = IllegalArgumentException::class)
 //    fun invalid_first_path_2() {
 //
-//        RepositoryName(EMPTY)
+//        RepositoryNameClass(EMPTY)
 //    }
 //
 //    @Test(expected = IllegalArgumentException::class)
 //    fun invalid_second_path_1() {
 //
-//        RepositoryName("jboss", listOf(EMPTY))
+//        RepositoryNameClass("jboss", listOf(EMPTY))
 //    }
 //
 //    @Test(expected = IllegalArgumentException::class)
 //    fun invalid_second_path_2() {
 //
-//        RepositoryName("jboss", listOf(invalidIdentifier))
+//        RepositoryNameClass("jboss", listOf(invalidIdentifier))
 //    }
 //
 //    @Test(expected = IllegalArgumentException::class)
 //    fun too_long_repository_name() {
 //
-//        RepositoryName("a".repeat(400))
+//        RepositoryNameClass("a".repeat(400))
 //    }
 //
 //    @Test

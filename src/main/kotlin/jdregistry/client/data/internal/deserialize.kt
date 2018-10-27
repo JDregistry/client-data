@@ -9,7 +9,6 @@ import jdregistry.client.data.PathComponent
 import jdregistry.client.data.Tag
 import java.io.IOException
 
-
 internal sealed class DockerDeserializer<T>(vc: Class<T>? = null) : StdDeserializer<T>(vc) {
 
     abstract fun textToObject(text: String): T
