@@ -1,11 +1,11 @@
 package jdregistry.client.data
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalArgumentException
-
 
 /**
  * Unifies routines to test objects that are generally representable by a String
@@ -76,7 +76,6 @@ abstract class TestBase<T> {
         forEachValidStringAsObject { it.toJSON() }
     }
 
-
     fun `Writing as JSON String is same as objectToString with Quotes`() {
 
         forEachValidStringAsObject {
@@ -96,21 +95,18 @@ abstract class TestBase<T> {
     fun `Consecutive Writing and Reading of objects preserves equality`() {
 
         forEachValidStringAsObject {
-
-               val reReadObject: T = jacksonObjectMapper().readValue(it.toJSON(), clazz)
-               assertEquals(reReadObject, it)
+            val reReadObject: T = jacksonObjectMapper().readValue(it.toJSON(), clazz)
+            Assertions.assertEquals(reReadObject, it)
         }
     }
-
-
 }
 
 //
-//internal fun <T> Iterable<T>.serializedSameAs(transform: (T) -> String) {
+// internal fun <T> Iterable<T>.serializedSameAs(transform: (T) -> String) {
 //
 //    forEach {
 //
 //        val serialized = jacksonObjectMapper().writeValueAsString(it)
 //        Assertions.assertEquals(serialized, transform(it).quoted())
 //    }
-//}
+// }

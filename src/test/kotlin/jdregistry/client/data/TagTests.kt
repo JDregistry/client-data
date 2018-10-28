@@ -31,7 +31,6 @@ class TagTests : TestBase<Tag>() {
         this.`each invalid String will raise an IllegalArgumentException`()
     }
 
-    // 2
     @Test
     fun `valid Strings can be turned into Tags`() {
 
@@ -55,7 +54,6 @@ class TagTests : TestBase<Tag>() {
         this.`all Objects can be written as JSON`()
     }
 
-
     @Test
     fun `JSON serialized form is equal to repr with quotes`() {
 
@@ -73,7 +71,6 @@ class TagTests : TestBase<Tag>() {
 
         this.`Consecutive Writing and Reading of objects preserves equality`()
     }
-
 
 //    @Test
 //    fun `latest tag is correctly read from the string latest`() {

@@ -14,9 +14,9 @@ internal sealed class DockerSerializer<T>(t: Class<T>? = null) : StdSerializer<T
 
     @Throws(IOException::class, JsonProcessingException::class)
     final override fun serialize(
-            value: T,
-            jgen: JsonGenerator,
-            provider: SerializerProvider
+        value: T,
+        jgen: JsonGenerator,
+        provider: SerializerProvider
     ) {
         jgen.writeString(objectToText(value))
     }
