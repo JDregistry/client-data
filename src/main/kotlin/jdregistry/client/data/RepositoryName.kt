@@ -1,5 +1,20 @@
 package jdregistry.client.data
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import jdregistry.client.data.internal.RepositoryNameDeserializer
+import jdregistry.client.data.internal.RepositoryNameSerializer
+
+/**
+ * Represents a Docker [RepositoryName] as it is defined by the official Docker Registry V2 API
+ * specification
+ *
+ * @author Lukas Zimmermann
+ * @since 0.0.7
+ *
+ */
+@JsonSerialize(using = RepositoryNameSerializer::class)
+@JsonDeserialize(using = RepositoryNameDeserializer::class)
 interface RepositoryName {
 
     /**
@@ -25,7 +40,7 @@ interface RepositoryName {
 
     private data class Generic(override val list: List<PathComponent>) : RepositoryName {
 
-        override val repr = list.joinToString(separator = SEP)
+        override val repr = list.joinToString(separator = SEP) { it.repr }
 
         override fun resolve(tag: Tag, host: String?): String {
 

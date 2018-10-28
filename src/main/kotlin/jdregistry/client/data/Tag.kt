@@ -24,14 +24,13 @@ interface Tag {
     private data class Generic(override val repr: String) : Tag {
 
         init {
-            require(repr.isValidDockerTag()) {
+            require(repr.matches(tagRegex)) {
 
                 "Failed to create Docker Tag. The String $repr is not a valid Docker Tag."
             }
         }
         private companion object {
-            val tagRegex = Regex("[a-zA-Z0-9_][a-zA-Z0-9_.-]*")
-            fun String.isValidDockerTag() = this.length < 129 && this.matches(tagRegex)
+            private val tagRegex = Regex("[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127}")
         }
     }
 

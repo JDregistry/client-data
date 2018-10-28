@@ -1,13 +1,26 @@
 package jdregistry.client.data
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertSame
 
 class TagTests : TestBase<Tag>() {
 
     override fun stringToObject(input: String): Tag = Tag.from(input)
     override fun objectToString(obj: Tag): String = obj.repr
 
-    override val invalidStrings: List<String> = listOf("  ", "", "?", " af", "af ad", "a".repeat(300), "\t")
+    override val invalidStrings: List<String> = listOf(
+            "  ",
+            "",
+            "?",
+            " af",
+            "af ad",
+            "a".repeat(300),
+            "\t",
+            "a".repeat(129)) // Tag too long by one char
+
     override val validStrings: List<String> = listOf(
             "latest",
             "foo",
@@ -17,14 +30,15 @@ class TagTests : TestBase<Tag>() {
             "3.8",
             "python2.7",
             "python2.7-alpine",
-            "python2.6-alpine3.8")
+            "python2.6-alpine3.8",
+            "a",
+            "a".repeat(128)) // Maximal length of a Docker Tag
 
     override val clazz: Class<Tag> = Tag::class.java
 
     /*
-     *  Tests Isomorphie between Strings and Objects
+     *  Equality:  String-Object transformations
      */
-    // 1
     @Test
     fun `invalid Strings will raise an IllegalArgumentException`() {
 
@@ -37,7 +51,6 @@ class TagTests : TestBase<Tag>() {
         this.`valid Strings can be turned to Objects`()
     }
 
-    // 3
     @Test
     fun `from and repr are inverse operations`() {
 
@@ -45,25 +58,12 @@ class TagTests : TestBase<Tag>() {
     }
 
     /*
-     * (De-)Serialization
+     * JSON-Object Transformations
      */
-    // 4
     @Test
-    fun `all valid  Tags can be serialized as JSON`() {
+    fun `all valid Tags can be serialized as JSON`() {
 
         this.`all Objects can be written as JSON`()
-    }
-
-    @Test
-    fun `JSON serialized form is equal to repr with quotes`() {
-
-        this.`Writing as JSON String is same as objectToString with Quotes`()
-    }
-
-    @Test
-    fun `JSON serialized form without quotes can be read with from`() {
-
-        this.`Reading from JSON String is the same as stringToObject without Quotes`()
     }
 
     @Test
@@ -72,51 +72,50 @@ class TagTests : TestBase<Tag>() {
         this.`Consecutive Writing and Reading of objects preserves equality`()
     }
 
-//    @Test
-//    fun `latest tag is correctly read from the string latest`() {
-//
-//        val tag = Tag.from("latest")
-//        assertEquals(Tag.LATEST, tag)
-//        assertSame(Tag.LATEST, tag)
-//    }
-//
-//    @Test
-//    fun `short wiring the LATEST tag works as expected`() {
-//
-//        assertEquals(Tag.LATEST, Tag.Common.LATEST)
-//        assertSame(Tag.LATEST, Tag.Common.LATEST)
-//    }
-//
-//    @Test
-//    fun `the latest tag can only be created from one String literal`() {
-//
-//        val latest = "latest"
-//        assertNotEqualTags(
-//                latest to "LATEST",
-//                latest to "Latest",
-//                latest to "LaTest"
-//        )
-//    }
-//
-//    @Test
-//    fun `Docker tags are case sensitive`() {
-//
-//        assertNotEqualTags(
-//                "foo" to "Foo",
-//                "foo" to "FOO"
-//        )
-//    }
-//
+    /*
+     * String-JSON Transformations
+     */
+    @Test
+    fun `JSON and String representation of Tag can be transformed into each other by quoting`() {
 
-//
+        this.`quote and unquote transformations work as expected`()
+    }
 
-//
-//    @Test
-//    fun `Deserialization preserves identity of latest tag`() {
-//
-//        generateSequence { "latest" }.take(100).forEach {
-//
-//            assertSame(Tag.LATEST, Tag.from(it))
-//        }
-//    }
+    /*
+     * LATEST tag
+     */
+
+    // Identity
+    @Test
+    fun `Creating latest tag from String preserves identity`() {
+
+        assertSame(Tag.LATEST, Tag.from("latest"))
+    }
+
+    @Test
+    fun `Common LATEST and Tag LATEST refer to the same object`() {
+
+        assertSame(Tag.LATEST, Tag.Common.LATEST)
+    }
+
+    @Test
+    fun `Reading and writing the latest tag as String preserves identity`() {
+
+        assertSame(Tag.LATEST, stringToObject(objectToString(Tag.LATEST)))
+    }
+
+    @Test
+    fun `Reading and writing the latest tag as JSON preserved identity`() {
+
+        val json = jacksonObjectMapper().writeValueAsString(Tag.LATEST)
+        assertSame(Tag.LATEST, jacksonObjectMapper().readValue<Tag>(json))
+    }
+
+    // Representations
+    @Test
+    fun `The representations of the latest tag are as expected`() {
+
+        assertEquals("latest", Tag.LATEST.repr)
+        assertEquals("\"latest\"", jacksonObjectMapper().writeValueAsString(Tag.LATEST))
+    }
 }

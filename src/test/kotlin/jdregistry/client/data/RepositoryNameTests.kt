@@ -1,144 +1,130 @@
 package jdregistry.client.data
 
-class RepositoryNameTests {
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.lang.IllegalArgumentException
 
-//    private val repos = listOf(
-//            RepositoryNameClass("namespace/repo1"),
-//            RepositoryNameClass("repo2")
-//    )
-//    private val tags = listOf(
-//            Tag.LATEST,
-//            Tag.from("other")
-//    )
-//
-//    @Test
-//    fun resolve_tag() {
-//
-//        val expected = listOf(
-//                "namespace/repo1:latest",
-//                "namespace/repo1:other",
-//                "repo2:latest",
-//                "repo2:other"
-//        )
-//        cross(repos, tags).forEachIndexed { index, pair ->
-//
-//            Assert.assertEquals(pair.first.resolve(pair.second), expected[index])
-//        }
-//
-//        // resolve implicit
-//        Assert.assertEquals(repo0.resolve(), "namespace/repo1:latest")
-//        Assert.assertEquals(repo1.resolve(), "repo2:latest")
-//    }
-//
-//    @Test
-//    fun some_valid_repos() {
-//
-//        RepositoryNameClass("foo/bar")
-//        RepositoryNameClass("foo")
-//    }
-//
-//    @Test(expected = IllegalArgumentException::class)
-//    fun invalid_first_path_1() {
-//
-//        RepositoryNameClass(invalidIdentifier)
-//    }
-//
-//    @Test(expected = IllegalArgumentException::class)
-//    fun invalid_first_path_2() {
-//
-//        RepositoryNameClass(EMPTY)
-//    }
-//
-//    @Test(expected = IllegalArgumentException::class)
-//    fun invalid_second_path_1() {
-//
-//        RepositoryNameClass("jboss", listOf(EMPTY))
-//    }
-//
-//    @Test(expected = IllegalArgumentException::class)
-//    fun invalid_second_path_2() {
-//
-//        RepositoryNameClass("jboss", listOf(invalidIdentifier))
-//    }
-//
-//    @Test(expected = IllegalArgumentException::class)
-//    fun too_long_repository_name() {
-//
-//        RepositoryNameClass("a".repeat(400))
-//    }
-//
-//    @Test
-//    fun get() {
-//
-//        Assert.assertEquals(repo0[0], repo0.firstPathComponent)
-//        Assert.assertEquals(repo1[0], repo1.firstPathComponent)
-//        Assert.assertEquals(repo0[0], "namespace")
-//        Assert.assertEquals(repo1[0], "repo2")
-//        Assert.assertEquals(repo0[1], "repo1")
-//    }
-//
-//    @Test
-//    fun to_string() {
-//
-//        Assert.assertEquals(repo0.toString(), "namespace/repo1")
-//        Assert.assertEquals(repo1.toString(), "repo2")
-//    }
-//
-//    @Test
-//    fun as_string() {
-//
-//        Assert.assertEquals(repo0.asString(), "namespace/repo1")
-//        Assert.assertEquals(repo1.asString(), "repo2")
-//    }
-//
-//    @Test
-//    fun to_string_and_as_string_are_the_same() {
-//
-//        Assert.assertEquals(repo0.asString(), repo0.toString())
-//        Assert.assertEquals(repo1.asString(), repo1.toString())
-//    }
-//
-//    @Test
-//    fun resolve_with_hostname() {
-//
-//        // Explicit Tag
-//        Assert.assertEquals(repo0.resolve(tag0, "docker.io"), "docker.io/namespace/repo1:latest")
-//        Assert.assertEquals(repo0.resolve(tag1, "docker.io"), "docker.io/namespace/repo1:other")
-//        Assert.assertEquals(repo0.resolve(tag0, "localhost:3000"), "localhost:3000/namespace/repo1:latest")
-//        Assert.assertEquals(repo0.resolve(tag1, "localhost:3000"), "localhost:3000/namespace/repo1:other")
-//
-//        Assert.assertEquals(repo1.resolve(tag0, "docker.io"), "docker.io/repo2:latest")
-//        Assert.assertEquals(repo1.resolve(tag1, "docker.io"), "docker.io/repo2:other")
-//        Assert.assertEquals(repo1.resolve(tag0, "localhost:3000"), "localhost:3000/repo2:latest")
-//        Assert.assertEquals(repo1.resolve(tag1, "localhost:3000"), "localhost:3000/repo2:other")
-//
-//        // Implicit Tag
-//        Assert.assertEquals(repo0.resolve(host = "docker.io"), "docker.io/namespace/repo1:latest")
-//        Assert.assertEquals(repo0.resolve(host = "localhost:3000"), "localhost:3000/namespace/repo1:latest")
-//
-//        Assert.assertEquals(repo1.resolve(host = "docker.io"), "docker.io/repo2:latest")
-//        Assert.assertEquals(repo1.resolve(host = "localhost:3000"), "localhost:3000/repo2:latest")
-//    }
-//
-//    @Test
-//    fun resolve_with_hostname_slash() {
-//
-//        // Explicit tag
-//        Assert.assertEquals(repo0.resolve(tag0, "docker.io/"), "docker.io/namespace/repo1:latest")
-//        Assert.assertEquals(repo0.resolve(tag1, "docker.io/"), "docker.io/namespace/repo1:other")
-//        Assert.assertEquals(repo0.resolve(tag0, "localhost:3000/"), "localhost:3000/namespace/repo1:latest")
-//        Assert.assertEquals(repo0.resolve(tag1, "localhost:3000/"), "localhost:3000/namespace/repo1:other")
-//
-//        Assert.assertEquals(repo1.resolve(tag0, "docker.io/"), "docker.io/repo2:latest")
-//        Assert.assertEquals(repo1.resolve(tag1, "docker.io/"), "docker.io/repo2:other")
-//        Assert.assertEquals(repo1.resolve(tag0, "localhost:3000/"), "localhost:3000/repo2:latest")
-//        Assert.assertEquals(repo1.resolve(tag1, "localhost:3000/"), "localhost:3000/repo2:other")
-//
-//        // Implicit Tag
-//        Assert.assertEquals(repo0.resolve(host = "docker.io/"), "docker.io/namespace/repo1:latest")
-//        Assert.assertEquals(repo0.resolve(host = "localhost:3000/"), "localhost:3000/namespace/repo1:latest")
-//
-//        Assert.assertEquals(repo1.resolve(host = "docker.io/"), "docker.io/repo2:latest")
-//        Assert.assertEquals(repo1.resolve(host = "localhost:3000/"), "localhost:3000/repo2:latest")
-//    }
+class RepositoryNameTests : TestBase<RepositoryName>() {
+
+    override fun stringToObject(input: String): RepositoryName = RepositoryName.from(input)
+
+    override fun objectToString(obj: RepositoryName): String = obj.repr
+
+    override val validStrings: Iterable<String> = listOf(
+            "library/python",
+            "foo/bar/baz",
+            "alpine",
+            "test-image",
+            "namespace/repo1",
+            "repo2",
+            "a".repeat(255)
+    )
+
+    override val invalidStrings: Iterable<String> = listOf(
+            "",
+            " ",
+            "//",
+            "/ /asf",
+            "a".repeat(256)
+    )
+
+    override val clazz: Class<RepositoryName> = RepositoryName::class.java
+
+    /*
+     *  Equality:  String-Object transformations
+     */
+    @Test
+    fun `invalid Strings will raise an IllegalArgumentException`() {
+
+        this.`each invalid String will raise an IllegalArgumentException`()
+    }
+
+    @Test
+    fun `valid Strings can be turned into RepositoryNames`() {
+
+        this.`valid Strings can be turned to Objects`()
+    }
+
+    @Test
+    fun `from and repr are inverse operations`() {
+
+        this.`stringToObject and ObjectToString are inverse`()
+    }
+
+    /*
+ * JSON-Object Transformations
+ */
+    @Test
+    fun `all valid Repository Names can be serialized as JSON`() {
+
+        this.`all Objects can be written as JSON`()
+    }
+
+    @Test
+    fun `reading and writing JSON preserves equality`() {
+
+        this.`Consecutive Writing and Reading of objects preserves equality`()
+    }
+
+    /*
+     * String-JSON Transformations
+     */
+    @Test
+    fun `JSON and String representation of Tag can be transformed into each other by quoting`() {
+
+        this.`quote and unquote transformations work as expected`()
+    }
+
+    /*
+     * List representation
+     */
+    @Test
+    fun `List representation of RepositoryName is consistent with the manually constructed list`() {
+
+        assertEquals(listOf(PathComponent.from("foo")), RepositoryName.from("foo").list)
+        assertEquals(
+                listOf(PathComponent.from("foo"), PathComponent.from("bar")),
+                RepositoryName.from("foo/bar").list)
+    }
+
+    @Test
+    fun `empty repositories are not allowed`() {
+
+        assertThrows<IllegalArgumentException> { RepositoryName.from("") }
+    }
+
+    /*
+     * Resolve Tags
+     */
+    @Test
+    fun resolve_tag() {
+
+        assertEquals("foo:latest", RepositoryName.from("foo").resolve(Tag.LATEST))
+        assertEquals("foo:bar", RepositoryName.from("foo").resolve(Tag.from("bar")))
+        assertEquals("docker.io/foo:bar", RepositoryName.from("foo").resolve(Tag.from("bar"),
+                host = "docker.io"))
+        assertEquals("docker.io/foo:bar", RepositoryName.from("foo").resolve(Tag.from("bar"),
+                host = "docker.io/"))
+        assertEquals("docker.io:3000/foo:bar", RepositoryName.from("foo").resolve(Tag.from("bar"),
+                host = "docker.io:3000"))
+        assertEquals("docker.io:3000/foo:bar", RepositoryName.from("foo").resolve(Tag.from("bar"),
+                host = "docker.io:3000/"))
+        assertEquals("namespace/foo:latest",
+                RepositoryName.from("namespace/foo").resolve(Tag.LATEST))
+        assertEquals("namespace/foo:bar",
+                RepositoryName.from("namespace/foo").resolve(Tag.from("bar")))
+        assertEquals("docker.io/namespace/foo:bar",
+                RepositoryName.from("namespace/foo").resolve(Tag.from("bar"),
+                host = "docker.io"))
+        assertEquals("docker.io/namespace/foo:bar",
+                RepositoryName.from("namespace/foo").resolve(Tag.from("bar"),
+                host = "docker.io/"))
+        assertEquals("docker.io:3000/namespace/foo:bar",
+                RepositoryName.from("namespace/foo").resolve(Tag.from("bar"),
+                host = "docker.io:3000"))
+        assertEquals("docker.io:3000/namespace/foo:bar",
+                RepositoryName.from("namespace/foo").resolve(Tag.from("bar"),
+                host = "docker.io:3000/"))
+    }
 }

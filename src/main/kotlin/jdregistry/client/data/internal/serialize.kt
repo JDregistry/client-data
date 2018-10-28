@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import jdregistry.client.data.PathComponent
+import jdregistry.client.data.RepositoryName
 import jdregistry.client.data.Tag
 import java.io.IOException
 
@@ -32,4 +33,10 @@ internal class PathComponentSerializer
 @JvmOverloads constructor(t: Class<PathComponent>? = null) : DockerSerializer<PathComponent>(t) {
 
     override fun objectToText(obj: PathComponent) = obj.repr
+}
+
+internal class RepositoryNameSerializer
+@JvmOverloads constructor(t: Class<RepositoryName>? = null) : DockerSerializer<RepositoryName>(t) {
+
+    override fun objectToText(obj: RepositoryName) = obj.repr
 }

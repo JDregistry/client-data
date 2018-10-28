@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import jdregistry.client.data.PathComponent
+import jdregistry.client.data.RepositoryName
 import jdregistry.client.data.Tag
 import java.io.IOException
 
@@ -31,4 +32,10 @@ internal class PathComponentDeserializer
 @JvmOverloads constructor(vc: Class<PathComponent>? = null) : DockerDeserializer<PathComponent>(vc) {
 
     override fun textToObject(text: String) = PathComponent.from(text)
+}
+
+internal class RepositoryNameDeserializer
+@JvmOverloads constructor(vc: Class<RepositoryName>? = null) : DockerDeserializer<RepositoryName>(vc) {
+
+    override fun textToObject(text: String) = RepositoryName.from(text)
 }
