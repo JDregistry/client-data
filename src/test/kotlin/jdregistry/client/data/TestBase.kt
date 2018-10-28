@@ -1,8 +1,8 @@
 package jdregistry.client.data
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalArgumentException
 
@@ -45,44 +45,51 @@ abstract class TestBase<T> {
     /*
      *  Isomorphie between String and Objects wrt '=='
      */
-    fun `each invalid String will raise an IllegalArgumentException`() { // 1
+    // 1
+    fun `each invalid String will raise an IllegalArgumentException`() {
 
         invalidStrings.forEach { assertThrows<IllegalArgumentException> { stringToObject(it) } }
     }
 
+    // 2
     fun `valid Strings can be turned to Objects`() {
 
         forEachValidString {
-
-            Assertions.assertDoesNotThrow { stringToObject(it) }
+            assertDoesNotThrow { stringToObject(it) }
         }
     }
 
+    // 3
     fun `stringToObject and ObjectToString are inverse`() {
 
         forEachValidString {
-            Assertions.assertEquals(it, objectToString(stringToObject(it)))
+            assertEquals(it, objectToString(stringToObject(it)))
         }
     }
 
     /*
      *  Serialization
      */
+    // 4
+    fun `all Objects can be written as JSON`() {
+
+        forEachValidStringAsObject { it.toJSON() }
+    }
+
+
     fun `Writing as JSON String is same as objectToString with Quotes`() {
 
         forEachValidStringAsObject {
-
             val serialized = it.toJSON()
-            Assertions.assertEquals(serialized, objectToString(it).quoted())
+            assertEquals(serialized, objectToString(it).quoted())
         }
     }
 
     fun `Reading from JSON String is the same as stringToObject without Quotes`() {
 
         forEachValidStringAsObject {
-
             val unquotedJSON = it.toJSON().unquoted()
-            Assertions.assertEquals(it, stringToObject(unquotedJSON))
+            assertEquals(it, stringToObject(unquotedJSON))
         }
     }
 
@@ -91,7 +98,7 @@ abstract class TestBase<T> {
         forEachValidStringAsObject {
 
                val reReadObject: T = jacksonObjectMapper().readValue(it.toJSON(), clazz)
-               Assertions.assertEquals(reReadObject, it)
+               assertEquals(reReadObject, it)
         }
     }
 

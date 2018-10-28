@@ -8,26 +8,37 @@ class TagTests : TestBase<Tag>() {
     override fun objectToString(obj: Tag): String = obj.repr
 
     override val invalidStrings: List<String> = listOf("  ", "", "?", " af", "af ad", "a".repeat(300), "\t")
-    override val validStrings: List<String> = listOf("latest", "foo", "bar", "A", "Latest")
+    override val validStrings: List<String> = listOf(
+            "latest",
+            "foo",
+            "bar",
+            "A",
+            "Latest",
+            "3.8",
+            "python2.7",
+            "python2.7-alpine",
+            "python2.6-alpine3.8")
 
     override val clazz: Class<Tag> = Tag::class.java
 
     /*
      *  Tests Isomorphie between Strings and Objects
      */
-    @Test // 1
+    // 1
+    @Test
     fun `invalid Strings will raise an IllegalArgumentException`() {
 
         this.`each invalid String will raise an IllegalArgumentException`()
     }
 
-
+    // 2
     @Test
-    fun `valid Strings can be turned into tags`() {
+    fun `valid Strings can be turned into Tags`() {
 
         this.`valid Strings can be turned to Objects`()
     }
 
+    // 3
     @Test
     fun `from and repr are inverse operations`() {
 
@@ -37,6 +48,14 @@ class TagTests : TestBase<Tag>() {
     /*
      * (De-)Serialization
      */
+    // 4
+    @Test
+    fun `all valid  Tags can be serialized as JSON`() {
+
+        this.`all Objects can be written as JSON`()
+    }
+
+
     @Test
     fun `JSON serialized form is equal to repr with quotes`() {
 
